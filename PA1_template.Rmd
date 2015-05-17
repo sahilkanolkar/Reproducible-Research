@@ -33,6 +33,8 @@ activity$date <- as.Date(activity$date, "%Y-%m-%d")
 ```{r echo=TRUE}
 totalSteps <- aggregate(steps ~ date, data = activity, sum, na.rm = TRUE)
 hist(totalSteps$steps, main = "Total steps taken each day", xlab = "Day", col = "blue")
+dev.copy(jpeg,filename="mean.jpg")
+dev.off ()
 ```
 
 2. Mean and Median of the total number of steps taken per day is as follows:
@@ -50,6 +52,8 @@ Time-Series plot for the 5 minute interval and the average number of steps taken
 time <- tapply(activity$steps, activity$interval,mean,na.rm=TRUE)
 plot(row.names(time), time, type = "l", xlab = "5-min interval", 
      ylab = "Average across all Days", main = "Average number of steps taken")
+dev.copy(jpeg,filename="daily activity.jpg")
+dev.off ()
 ```
 
 The 5-minute interval, on average across all the days in the dataset, containing the maximum number of steps is
@@ -91,6 +95,8 @@ new_activity$steps <- NAvalues
 ```{r echo=TRUE}
 totalSteps2 <- aggregate(steps ~ date, data = new_activity, sum, na.rm = TRUE)
 hist(totalSteps2$steps, main = "Total steps taken each day", xlab = "Day", col = "blue")
+dev.copy(jpeg,filename="mean with no missing.jpg")
+dev.off ()
 mean(totalSteps2$steps)
 median(totalSteps2$steps)
 ```
@@ -123,6 +129,8 @@ names(stepsByDay) <- c("interval", "daylevel", "steps")
 ```{r echo=TRUE}
 xyplot(steps ~ interval | daylevel, stepsByDay, type = "l", layout = c(1, 2), 
        xlab = "Interval", ylab = "Number of steps")
+dev.copy(jpeg,filename="weekend vs weekday.jpg")
+dev.off ()
 ```
 
 Thus it can be seen that the number of steps are higher in weekends than in weekdays.

@@ -51,6 +51,24 @@ hist(totalSteps$steps, main = "Total steps taken each day", xlab = "Day", col = 
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
 
+```r
+dev.copy(jpeg,filename="mean.jpg")
+```
+
+```
+## jpeg 
+##    3
+```
+
+```r
+dev.off ()
+```
+
+```
+## png 
+##   2
+```
+
 2. Mean and Median of the total number of steps taken per day is as follows:
 
 
@@ -82,6 +100,24 @@ plot(row.names(time), time, type = "l", xlab = "5-min interval",
 ```
 
 ![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png) 
+
+```r
+dev.copy(jpeg,filename="daily activity.jpg")
+```
+
+```
+## jpeg 
+##    3
+```
+
+```r
+dev.off ()
+```
+
+```
+## png 
+##   2
+```
 
 The 5-minute interval, on average across all the days in the dataset, containing the maximum number of steps is
 
@@ -140,6 +176,24 @@ hist(totalSteps2$steps, main = "Total steps taken each day", xlab = "Day", col =
 ![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11-1.png) 
 
 ```r
+dev.copy(jpeg,filename="mean with no missing.jpg")
+```
+
+```
+## jpeg 
+##    3
+```
+
+```r
+dev.off ()
+```
+
+```
+## png 
+##   2
+```
+
+```r
 mean(totalSteps2$steps)
 ```
 
@@ -188,5 +242,23 @@ xyplot(steps ~ interval | daylevel, stepsByDay, type = "l", layout = c(1, 2),
 ```
 
 ![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13-1.png) 
+
+```r
+dev.copy(jpeg,filename="weekend vs weekday.jpg")
+```
+
+```
+## jpeg 
+##    3
+```
+
+```r
+dev.off ()
+```
+
+```
+## png 
+##   2
+```
 
 Thus it can be seen that the number of steps are higher in weekends than in weekdays.
