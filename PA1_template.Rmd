@@ -1,0 +1,128 @@
+---
+title: 'Reproducible Research: Peer Assessment 1'
+author: "Sahil Kanolkar"
+date: "Sunday, May 17, 2015"
+output: html_document
+---
+
+### Loading and Preprocessing the Data
+
+The activity data is loaded using the read.csv() function as follows:
+
+```{r echo=TRUE}
+activity <- read.csv("activity.csv", colClasses = c("numeric", "character","numeric"))
+head(activity)
+```
+
+The plotting system used is lattice plotting system and it can loaded as follows:
+
+```{r echo=TRUE}
+library(lattice)
+```
+
+The dates for various acivities recorded can be extracted as follows:
+
+```{r echo=TRUE}
+activity$date <- as.Date(activity$date, "%Y-%m-%d")
+```
+
+### Mean total number of steps taken per day
+
+1. The total number of steps can be found out by using the aggregate function and this data can then better be visualized using a histogram given below.
+
+```{r echo=TRUE}
+totalSteps <- aggregate(steps ~ date, data = activity, sum, na.rm = TRUE)
+hist(totalSteps$steps, main = "Total steps taken each day", xlab = "Day", col = "blue")
+```
+
+2. Mean and Median of the total number of steps taken per day is as follows:
+
+```{r echo=TRUE}
+mean(totalSteps$steps)
+median(totalSteps$steps)
+```
+
+### Average Daily Activity pattern
+
+Time-Series plot for the 5 minute interval and the average number of steps taken, averaged across all days.
+
+```{r echo=TRUE}
+time <- tapply(activity$steps, activity$interval,mean,na.rm=TRUE)
+plot(row.names(time), time, type = "l", xlab = "5-min interval", 
+     ylab = "Average across all Days", main = "Average number of steps taken")
+```
+
+The 5-minute interval, on average across all the days in the dataset, containing the maximum number of steps is
+
+```{r echo=TRUE}
+max <- which.max(time)
+names(max)
+```
+
+### Imputing Missing Values
+
+1. The total number of missing values in the dataset are
+```{r echo=TRUE}
+sum(is.na(activity))
+```
+
+2. Fill in the missing values with the mean
+```{r echo=TRUE}
+StepsAverage <- aggregate(steps ~ interval, data = activity, FUN = mean)
+NAvalues <- numeric()
+for (i in 1:nrow(activity)) {
+    data <- activity[i, ]
+    if (is.na(data$steps)) {
+        steps <- subset(StepsAverage, interval == data$interval)$steps
+    } else {
+        steps <- data$steps
+    }
+    NAvalues <- c(NAvalues, steps)
+}
+```
+
+3. Creating a new dataset
+```{r echo=TRUE}
+new_activity <- activity
+new_activity$steps <- NAvalues
+```
+
+4. Histogram of the new dataset with mean and median
+```{r echo=TRUE}
+totalSteps2 <- aggregate(steps ~ date, data = new_activity, sum, na.rm = TRUE)
+hist(totalSteps2$steps, main = "Total steps taken each day", xlab = "Day", col = "blue")
+mean(totalSteps2$steps)
+median(totalSteps2$steps)
+```
+
+### Differences in the activity patterns between weekdays and weekends
+
+1. Weekdays function can be used for this purpose. A factor variable can be created as follows:
+
+```{r echo=TRUE}
+day <- weekdays(activity$date)
+daylevel <- vector()
+for (i in 1:nrow(activity)) {
+    if (day[i] == "Saturday") {
+        daylevel[i] <- "Weekend"
+    } else if (day[i] == "Sunday") {
+        daylevel[i] <- "Weekend"
+    } else {
+        daylevel[i] <- "Weekday"
+    }
+}
+activity$daylevel <- daylevel
+activity$daylevel <- factor(activity$daylevel)
+
+stepsByDay <- aggregate(steps ~ interval + daylevel, data = activity, mean)
+names(stepsByDay) <- c("interval", "daylevel", "steps")
+```
+
+2. Panel plot
+
+```{r echo=TRUE}
+xyplot(steps ~ interval | daylevel, stepsByDay, type = "l", layout = c(1, 2), 
+       xlab = "Interval", ylab = "Number of steps")
+```
+
+Thus it can be seen that the number of steps are higher in weekends than in weekdays.
